@@ -1,12 +1,12 @@
 package storage
 
 // содержит даные о запросах по эндпоитам
-type Data struct {
+type Endpoints struct {
 }
 
 type Sotorage interface {
 	//обновление данах
-	Updata(*Data) error
+	Updata(*Endpoints) error
 	//получение всех даных
-	All() (*Data, error)
+	All() (*Endpoints, error)
 }
