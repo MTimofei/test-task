@@ -32,7 +32,7 @@ func New(object kesh.Kesh) *Ping {
 	}
 }
 
-// запускает проверку задежак
+// запускает проверку сайтов
 func (p *Ping) Start() (err error) {
 	defer func() { err = e.IfErr(ErrStart, err) }()
 
@@ -69,6 +69,7 @@ func (p *Ping) readList(domens ...string) {
 	close(p.chDomain)
 }
 
+// производит проверку сайтав
 func (p *Ping) ping() {
 	defer p.wg.Done()
 

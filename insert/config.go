@@ -1,3 +1,4 @@
+// фаил содержит глобальнве переменые
 package confi
 
 import "flag"

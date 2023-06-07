@@ -12,7 +12,7 @@ import (
 	"githud.com/test-task/insert/processor/ping"
 )
 
-func Test(t *testing.T) {
+func TestAPI(t *testing.T) {
 
 	reqValid := httptest.NewRequest(http.MethodGet, "/site", strings.NewReader(``))
 	q := reqValid.URL.Query()
