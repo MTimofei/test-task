@@ -32,6 +32,7 @@ func New(object kesh.Kesh) *Ping {
 	}
 }
 
+// запускает проверку задежак
 func (p *Ping) Start() (err error) {
 	defer func() { err = e.IfErr(ErrStart, err) }()
 
@@ -63,7 +64,6 @@ func (p *Ping) readList(domens ...string) {
 		p.chDomain <- domen
 	}
 	close(p.chDomain)
-	p.wg.Done()
 }
 
 func (p *Ping) ping() {
@@ -88,7 +88,7 @@ func (p *Ping) ping() {
 
 		responseTime := time.Since(startTime)
 
-		err = p.object.Updata(kesh.New(domain, responseTime))
+		err = p.object.Updata(kesh.New(domain, time.Duration(responseTime.Milliseconds())))
 		if err != nil {
 			log.Println(e.Err(ErrPing, err))
 			continue

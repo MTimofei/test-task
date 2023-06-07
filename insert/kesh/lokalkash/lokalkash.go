@@ -94,7 +94,7 @@ func (l *LokalKash) Max() (w *kesh.Website, err error) {
 }
 
 func (l *LokalKash) List() (list []string, err error) {
-	list = make([]string,0, len(l.Kash))
+	list = make([]string, 0, len(l.Kash))
 
 	l.mux.Lock()
 
