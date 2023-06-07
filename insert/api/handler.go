@@ -6,8 +6,8 @@ import (
 )
 
 type json struct {
-	url   string        `json:"url"`
-	delay time.Duration `json:"delay"`
+	domain string        `json:"url"`
+	delay  time.Duration `json:"delay"`
 }
 
 func particula(w http.ResponseWriter, r *http.Request) {

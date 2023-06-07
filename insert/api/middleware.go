@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"regexp"
 
-	confi "git_p/githud.com/test-task/insert"
+	conf "githud.com/test-task/insert"
 )
 
 var validPath = regexp.MustCompile("^/(site|endpoint)?(/max|/min)?$")
@@ -27,7 +27,7 @@ func identifie(f func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc 
 	return func(w http.ResponseWriter, r *http.Request) {
 		key := r.Form.Get("key")
 
-		if key != confi.Key {
+		if key != conf.Key {
 			http.Error(w, "denial of access", http.StatusBadRequest)
 		}
 
