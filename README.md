@@ -9,4 +9,94 @@
 
 И есть администраторы, которые хотят получать статистику количества запросов пользователей по трем вышеперечисленным эндпойнтам.
 
+# API реализованы 
+## 1. Получить время доступа к определенному сайту
+###  Запрос 
+```
+http 1.1 Get /site?domain={eximpel.com}
+```
+### Ответ
+```
+JSON
+{
+"domain":"eximpel.com",
+"delay":"n*milliseconds"
+}
+code:200
+```
+## 2. Получить имя сайта с минимальным временем доступа.
+###  Запрос 
+```
+http 1.1 Get /site/min
+```
+### Ответ
+```
+JSON
+{
+"domain":"eximpel.com",
+"delay":"n*milliseconds"
+}
+code:200
+```
+##  3. Получить имя сайта с минимальным временем доступа.
+###  Запрос 
+```
+http 1.1 Get /site/min
+```
+### Ответ
+```
+JSON
+{
+"domain":"eximpel.com",
+"delay":"n*milliseconds"
+}
+code:200
+```
 
+##  4. Получить получение статистики по эндпойнта.
+###  Запрос 
+```
+http 1.1 Get /endpoint?key={key}
+```
+### Ответ
+```
+JSON
+{
+    "particula": {
+        "successful": "int",
+        "notSuccessful": "int"
+    },
+    "min": {
+        "successful": "int",
+        "notSuccessful": "int"
+    },
+    "max": {
+        "successful": "int",
+        "notSuccessful": "int"
+    }
+}
+code:200
+```
+
+## Ошибки 
+```
+denial of access
+code: 400
+```
+неверно усказан key при обращении к п.4
+
+```
+page not found
+code: 404
+```
+неверно усказан path при обращении к API
+```
+method not allowed
+code: 405
+```
+неверно усказан метод при обращении к API
+```
+not found
+code: 400
+```
+усказан несушествующий домен ,или недступен `?domain={ex.ru}`, при обращении к п.2
