@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"net/http"
-	"sync"
 	"time"
 
 	"githud.com/test-task/insert/kesh"
@@ -27,14 +26,12 @@ type Pointer struct {
 
 type application struct {
 	k    kesh.Kesh
-	mux  *sync.Mutex
 	stat Pointer
 }
 
 func New(k kesh.Kesh) *application {
 	return &application{
-		k:   k,
-		mux: &sync.Mutex{},
+		k: k,
 	}
 }
 

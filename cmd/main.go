@@ -19,7 +19,6 @@ func main() {
 
 	go func() {
 		for {
-			log.Println("ping start")
 			process := ping.New(k)
 			err := process.Start()
 			if err != nil {

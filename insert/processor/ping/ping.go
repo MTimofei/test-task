@@ -25,7 +25,7 @@ type Ping struct {
 
 func New(object kesh.Kesh) *Ping {
 	return &Ping{
-		client:   &http.Client{},
+		client:   &http.Client{Timeout: 1 * time.Second},
 		chDomain: make(chan string),
 		wg:       &sync.WaitGroup{},
 		object:   object,
@@ -35,6 +35,8 @@ func New(object kesh.Kesh) *Ping {
 // запускает проверку задежак
 func (p *Ping) Start() (err error) {
 	defer func() { err = e.IfErr(ErrStart, err) }()
+
+	log.Println("ping start")
 
 	var n int = runtime.NumCPU()
 	var ch = make(chan string)
@@ -55,6 +57,7 @@ func (p *Ping) Start() (err error) {
 	}
 
 	p.wg.Wait()
+	log.Println("ping stop")
 	return
 }
 

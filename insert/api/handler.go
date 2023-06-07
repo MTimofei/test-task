@@ -12,8 +12,6 @@ func (a *application) particula(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler particula:\t", err)
 		http.Error(w, "not found", http.StatusBadRequest)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Particula.NotSuccessful++
 		return
 	}
@@ -23,8 +21,6 @@ func (a *application) particula(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler particula:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Particula.NotSuccessful++
 		return
 	}
@@ -36,16 +32,12 @@ func (a *application) particula(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler particula:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Particula.NotSuccessful++
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 
-	// a.mux.Lock()
-	// defer a.mux.Unlock()
 	a.stat.Particula.Successful++
 }
 
@@ -55,8 +47,6 @@ func (a *application) min(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler min:\t", err)
 		http.Error(w, "", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Min.NotSuccessful++
 		return
 	}
@@ -66,8 +56,6 @@ func (a *application) min(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler min:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Min.NotSuccessful++
 		return
 	}
@@ -79,16 +67,12 @@ func (a *application) min(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler min:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Min.NotSuccessful++
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 
-	// a.mux.Lock()
-	// defer a.mux.Unlock()
 	a.stat.Min.Successful++
 }
 
@@ -98,8 +82,6 @@ func (a *application) max(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler max:\t", err)
 		http.Error(w, "", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Max.NotSuccessful++
 		return
 	}
@@ -109,8 +91,6 @@ func (a *application) max(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler max:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Max.NotSuccessful++
 		return
 	}
@@ -122,16 +102,12 @@ func (a *application) max(w http.ResponseWriter, r *http.Request) {
 		log.Println("handler max:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		// a.mux.Lock()
-		// defer a.mux.Unlock()
 		a.stat.Max.NotSuccessful++
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 
-	// a.mux.Lock()
-	// defer a.mux.Unlock()
 	a.stat.Max.Successful++
 }
 
