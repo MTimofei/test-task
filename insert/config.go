@@ -4,7 +4,10 @@ import "flag"
 
 const Key string = "admin"
 
-var Host *string = flag.String("host", "0.0.0.0:80", "address for starting the server")
+var (
+	Host    *string = flag.String("host", "0.0.0.0:80", "address for starting the server")
+	Timeout int     = *flag.Int("timeout", 10, "sed timeout")
+)
 
 var Domains = []string{
 	"google.com", "youtube.com", "facebook.com", "baidu.com",

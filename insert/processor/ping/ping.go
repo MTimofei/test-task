@@ -76,6 +76,11 @@ func (p *Ping) ping() {
 		req, err := http.NewRequest(http.MethodGet, "https://www."+domain, nil)
 		if err != nil {
 			log.Println(e.Err(ErrPing, err))
+			err = p.object.Updata(kesh.New(domain, 0))
+			if err != nil {
+				log.Println(e.Err(ErrPing, err))
+				continue
+			}
 			continue
 		}
 

@@ -39,19 +39,19 @@ func TestNew(t *testing.T) {
 				"bing.com", "xvideos.com", "google.ca",
 			},
 			map[string]time.Duration{
-				"google.com": time.Minute, "youtube.com": time.Minute, "facebook.com": time.Minute, "baidu.com": time.Minute,
-				"wikipedia.org": time.Minute, "qq.com": time.Minute, "taobao.com": time.Minute, "yahoo.com": time.Minute,
-				"tmall.com": time.Minute, "amazon.com": time.Minute, "google.co.in": time.Minute, "twitter.com": time.Minute,
-				"sohu.com": time.Minute, "jd.com": time.Minute, "live.com": time.Minute, "instagram.com": time.Minute,
-				"sina.com.cn": time.Minute, "weibo.com": time.Minute, "google.co.jp": time.Minute, "reddit.com": time.Minute,
-				"vk.com": time.Minute, "360.cn": time.Minute, "login.tmall.com": time.Minute, "blogspot.com": time.Minute,
-				"yandex.ru": time.Minute, "google.com.hk": time.Minute, "netflix.com": time.Minute, "linkedin.com": time.Minute,
-				"pornhub.com": time.Minute, "google.com.br": time.Minute,
-				"twitch.tv": time.Minute, "pages.tmall.com": time.Minute, "csdn.net": time.Minute, "yahoo.co.jp": time.Minute,
-				"mail.ru": time.Minute, "aliexpress.com": time.Minute, "alipay.com": time.Minute, "office.com": time.Minute,
-				"google.fr": time.Minute, "google.ru": time.Minute, "google.co.uk": time.Minute, "microsoftonline.com": time.Minute,
-				"google.de": time.Minute, "ebay.com": time.Minute, "microsoft.com": time.Minute, "livejasmin.com": time.Minute,
-				"t.co": time.Minute, "bing.com": time.Minute, "xvideos.com": time.Minute, "google.ca": time.Minute,
+				"google.com": time.Hour, "youtube.com": time.Hour, "facebook.com": time.Hour, "baidu.com": time.Hour,
+				"wikipedia.org": time.Hour, "qq.com": time.Hour, "taobao.com": time.Hour, "yahoo.com": time.Hour,
+				"tmall.com": time.Hour, "amazon.com": time.Hour, "google.co.in": time.Hour, "twitter.com": time.Hour,
+				"sohu.com": time.Hour, "jd.com": time.Hour, "live.com": time.Hour, "instagram.com": time.Hour,
+				"sina.com.cn": time.Hour, "weibo.com": time.Hour, "google.co.jp": time.Hour, "reddit.com": time.Hour,
+				"vk.com": time.Hour, "360.cn": time.Hour, "login.tmall.com": time.Hour, "blogspot.com": time.Hour,
+				"yandex.ru": time.Hour, "google.com.hk": time.Hour, "netflix.com": time.Hour, "linkedin.com": time.Hour,
+				"pornhub.com": time.Hour, "google.com.br": time.Hour,
+				"twitch.tv": time.Hour, "pages.tmall.com": time.Hour, "csdn.net": time.Hour, "yahoo.co.jp": time.Hour,
+				"mail.ru": time.Hour, "aliexpress.com": time.Hour, "alipay.com": time.Hour, "office.com": time.Hour,
+				"google.fr": time.Hour, "google.ru": time.Hour, "google.co.uk": time.Hour, "microsoftonline.com": time.Hour,
+				"google.de": time.Hour, "ebay.com": time.Hour, "microsoft.com": time.Hour, "livejasmin.com": time.Hour,
+				"t.co": time.Hour, "bing.com": time.Hour, "xvideos.com": time.Hour, "google.ca": time.Hour,
 			},
 		},
 	}
@@ -76,13 +76,13 @@ func TestSingl(t *testing.T) {
 		{
 			"test1",
 			"youtube.com",
-			&kesh.Website{Domain: "youtube.com", Delay: time.Minute},
+			&kesh.Website{Domain: "youtube.com", Delay: time.Second},
 			nil,
 		},
 		{
 			"test2",
 			"facebook.com",
-			&kesh.Website{Domain: "facebook.com", Delay: time.Minute},
+			&kesh.Website{Domain: "facebook.com", Delay: time.Second},
 			nil,
 		},
 		{
@@ -108,6 +108,9 @@ func TestSingl(t *testing.T) {
 		"ebay.com", "microsoft.com", "livejasmin.com", "t.co",
 		"bing.com", "xvideos.com", "google.ca",
 	)
+
+	kash.Updata(kesh.New("youtube.com", time.Second))
+	kash.Updata(kesh.New("facebook.com", time.Second))
 
 	for _, tC := range testCases {
 		t.Run(tC.title, func(t *testing.T) {
@@ -135,7 +138,7 @@ func TestUpdata(t *testing.T) {
 			"test1",
 			&kesh.Website{Domain: "google.com", Delay: time.Millisecond * 100},
 			map[string]time.Duration{
-				"google.com": time.Millisecond * 100, "youtube.com": time.Minute,
+				"google.com": time.Millisecond * 100, "youtube.com": time.Hour,
 			},
 			nil,
 		},
@@ -241,7 +244,7 @@ func TestMax(t *testing.T) {
 	}{
 		{
 			"test1",
-			kesh.New("bing.com", time.Hour*6),
+			kesh.New("google.com", time.Millisecond*150),
 			nil,
 		},
 	}

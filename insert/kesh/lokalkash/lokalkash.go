@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	confi "githud.com/test-task/insert"
 	"githud.com/test-task/insert/kesh"
 	"githud.com/test-task/pkg/e"
 )
@@ -12,6 +13,7 @@ import (
 const ErrNotFound string = "not found"
 const ErrSignal string = "can't get singl side"
 const ErrUpdata string = "can't updata data side"
+const ErrSiteUnavailable string = "site is unavailable"
 
 type LokalKash struct {
 	mux  sync.Mutex
@@ -22,9 +24,8 @@ func New(site ...string) *LokalKash {
 	var kash LokalKash
 	kash.Kash = make(map[string]time.Duration, len(site))
 	for _, s := range site {
-		kash.Kash[s] = time.Minute
+		kash.Kash[s] = time.Hour
 	}
-	//fmt.Println(kash.Kash)
 	return &kash
 }
 
@@ -32,13 +33,18 @@ func (l *LokalKash) Singl(domain string) (w *kesh.Website, err error) {
 	defer func() { err = e.IfErr(ErrSignal, err) }()
 
 	l.mux.Lock()
+	defer l.mux.Unlock()
 
 	delay := l.Kash[domain]
-	if delay == 0 {
-		return nil, errors.New(ErrNotFound)
-	}
 
-	l.mux.Unlock()
+	switch {
+	case delay == 0:
+		return nil, errors.New(ErrNotFound)
+	case delay > time.Second*time.Duration(confi.Timeout):
+		return nil, errors.New(ErrNotFound)
+	default:
+
+	}
 
 	return &kesh.Website{Domain: domain, Delay: delay}, nil
 }
@@ -47,6 +53,7 @@ func (l *LokalKash) Updata(w *kesh.Website) (err error) {
 	defer func() { err = e.IfErr(ErrUpdata, err) }()
 
 	l.mux.Lock()
+	defer l.mux.Unlock()
 
 	if l.Kash[w.Domain] != 0 {
 		l.Kash[w.Domain] = w.Delay
@@ -54,7 +61,6 @@ func (l *LokalKash) Updata(w *kesh.Website) (err error) {
 		return errors.New(ErrNotFound)
 	}
 
-	l.mux.Unlock()
 	return nil
 }
 
@@ -63,7 +69,7 @@ func (l *LokalKash) Min() (w *kesh.Website, err error) {
 	var d string
 
 	l.mux.Lock()
-
+	defer l.mux.Unlock()
 	for domain, delay := range l.Kash {
 		if time > delay {
 			time = delay
@@ -71,25 +77,24 @@ func (l *LokalKash) Min() (w *kesh.Website, err error) {
 		}
 	}
 
-	l.mux.Unlock()
-
 	return kesh.New(d, time), nil
 }
 
 func (l *LokalKash) Max() (w *kesh.Website, err error) {
+	var hai time.Duration = time.Second * time.Duration(confi.Timeout)
 	var time time.Duration = time.Nanosecond
 	var d string
 
 	l.mux.Lock()
+	defer l.mux.Unlock()
 
 	for domain, delay := range l.Kash {
-		if time < delay {
+		if time < delay && delay < hai {
 			time = delay
 			d = domain
 		}
 	}
 
-	l.mux.Unlock()
 	return kesh.New(d, time), nil
 }
 
@@ -97,11 +102,11 @@ func (l *LokalKash) List() (list []string, err error) {
 	list = make([]string, 0, len(l.Kash))
 
 	l.mux.Lock()
+	defer l.mux.Unlock()
 
 	for domain := range l.Kash {
 		list = append(list, domain)
 	}
 
-	l.mux.Unlock()
 	return list, nil
 }
