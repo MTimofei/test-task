@@ -16,13 +16,13 @@
 ### 1. Получить время доступа к определенному сайту
 ###  Запрос 
 ```
-http 1.1 Get /site?domain={eximpel.com}
+http 1.1 Get /site?domain={example.com}
 ```
 ### Ответ
 ```
 JSON
 {
-"domain":"eximpel.com",
+"domain":"example.com",
 "delay":"n*milliseconds"
 }
 code:200
@@ -36,7 +36,7 @@ http 1.1 Get /site/min
 ```
 JSON
 {
-"domain":"eximpel.com",
+"domain":"example.com",
 "delay":"n*milliseconds"
 }
 code:200
@@ -50,7 +50,7 @@ http 1.1 Get /site/min
 ```
 JSON
 {
-"domain":"eximpel.com",
+"domain":"example.com",
 "delay":"n*milliseconds"
 }
 code:200
@@ -65,7 +65,7 @@ http 1.1 Get /endpoint?key={key}
 ```
 JSON
 {
-    "particula": {
+    "certain": {
         "successful": "int",
         "notSuccessful": "int"
     },

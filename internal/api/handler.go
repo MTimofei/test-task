@@ -6,22 +6,22 @@ import (
 	"net/http"
 )
 
-func (a *application) particula(w http.ResponseWriter, r *http.Request) {
-	result, err := a.k.Singl(r.FormValue("domain"))
+func (a *application) certain(w http.ResponseWriter, r *http.Request) {
+	result, err := a.k.Single(r.FormValue("domain"))
 	if err != nil {
-		log.Println("handler particula:\t", err)
+		log.Println("handler certain:\t", err)
 		http.Error(w, "not found", http.StatusBadRequest)
 
-		a.stat.Particula.NotSuccessful++
+		a.stat.Certain.NotSuccessful++
 		return
 	}
 
 	j, err := json.Marshal(&Json{Domain: result.Domain, Delay: result.Delay})
 	if err != nil {
-		log.Println("handler particula:\t", err)
+		log.Println("handler certain:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		a.stat.Particula.NotSuccessful++
+		a.stat.Certain.NotSuccessful++
 		return
 	}
 
@@ -29,16 +29,16 @@ func (a *application) particula(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "no-cache")
 	_, err = w.Write(j)
 	if err != nil {
-		log.Println("handler particula:\t", err)
+		log.Println("handler certain:\t", err)
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 
-		a.stat.Particula.NotSuccessful++
+		a.stat.Certain.NotSuccessful++
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 
-	a.stat.Particula.Successful++
+	a.stat.Certain.Successful++
 }
 
 func (a *application) min(w http.ResponseWriter, r *http.Request) {

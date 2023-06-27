@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	confi "githud.com/test-task/insert"
-	"githud.com/test-task/insert/api"
-	"githud.com/test-task/insert/kesh/lokalkash"
-	"githud.com/test-task/insert/processor/ping"
+	config "githud.com/test-task/internal"
+	"githud.com/test-task/internal/api"
+	loсalcache "githud.com/test-task/internal/cache/localcache"
+	"githud.com/test-task/internal/processor/ping"
 )
 
 func TestAPI(t *testing.T) {
@@ -28,7 +28,7 @@ func TestAPI(t *testing.T) {
 		title          string
 		req            *http.Request
 		rec            *httptest.ResponseRecorder
-		ststusExpected int
+		statusExpected int
 	}{
 		{
 			"test-valid-min",
@@ -73,19 +73,19 @@ func TestAPI(t *testing.T) {
 			404,
 		},
 		{
-			"test2-invalid-middleware-methd",
+			"test2-invalid-middleware-method",
 			httptest.NewRequest(http.MethodPatch, "/site/min", nil),
 			httptest.NewRecorder(),
 			405,
 		},
 		{
-			"test3-invalid-middleware-methd",
+			"test3-invalid-middleware-method",
 			httptest.NewRequest(http.MethodPut, "/site/min", nil),
 			httptest.NewRecorder(),
 			405,
 		},
 	}
-	k := lokalkash.New(confi.Domains...)
+	k := loсalcache.New(config.Domains...)
 	p := ping.New(k)
 	err := p.Start()
 	if err != nil {
@@ -93,12 +93,12 @@ func TestAPI(t *testing.T) {
 	}
 
 	a := api.New(k)
-	mux := a.Routr()
+	mux := a.Router()
 	for _, tC := range testCases {
 		t.Run(tC.title, func(t *testing.T) {
 			mux.ServeHTTP(tC.rec, tC.req)
-			if tC.rec.Code != tC.ststusExpected {
-				t.Errorf("Ожидался код статуса %d, получен %d", tC.ststusExpected, tC.rec.Code)
+			if tC.rec.Code != tC.statusExpected {
+				t.Errorf("Ожидался код статуса %d, получен %d", tC.statusExpected, tC.rec.Code)
 			}
 		})
 	}

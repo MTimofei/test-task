@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"githud.com/test-task/insert/kesh"
+	"githud.com/test-task/internal/cache"
 	"githud.com/test-task/pkg/e"
 )
 
@@ -20,10 +20,10 @@ type Ping struct {
 	client   *http.Client
 	chDomain chan (string)
 	wg       *sync.WaitGroup
-	object   kesh.Kesh
+	object   cache.Cache
 }
 
-func New(object kesh.Kesh) *Ping {
+func New(object cache.Cache) *Ping {
 	return &Ping{
 		client:   &http.Client{Timeout: 1 * time.Second},
 		chDomain: make(chan string),
@@ -61,10 +61,10 @@ func (p *Ping) Start() (err error) {
 	return
 }
 
-func (p *Ping) readList(domens ...string) {
+func (p *Ping) readList(domains ...string) {
 	defer p.wg.Done()
-	for _, domen := range domens {
-		p.chDomain <- domen
+	for _, domain := range domains {
+		p.chDomain <- domain
 	}
 	close(p.chDomain)
 }
@@ -77,7 +77,7 @@ func (p *Ping) ping() {
 		req, err := http.NewRequest(http.MethodGet, "https://www."+domain, nil)
 		if err != nil {
 			log.Println(e.Err(ErrPing, err))
-			err = p.object.Updata(kesh.New(domain, 0))
+			err = p.object.Update(cache.New(domain, 0))
 			if err != nil {
 				log.Println(e.Err(ErrPing, err))
 				continue
@@ -97,7 +97,7 @@ func (p *Ping) ping() {
 
 		responseTime := time.Since(startTime)
 
-		err = p.object.Updata(kesh.New(domain, time.Duration(responseTime.Milliseconds())))
+		err = p.object.Update(cache.New(domain, time.Duration(responseTime.Milliseconds())))
 		if err != nil {
 			log.Println(e.Err(ErrPing, err))
 			continue

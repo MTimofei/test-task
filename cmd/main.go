@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"time"
 
-	confi "githud.com/test-task/insert"
-	"githud.com/test-task/insert/api"
-	"githud.com/test-task/insert/kesh/lokalkash"
-	"githud.com/test-task/insert/processor/ping"
+	config "githud.com/test-task/internal"
+	"githud.com/test-task/internal/api"
+	localcache "githud.com/test-task/internal/cache/localcache"
+	"githud.com/test-task/internal/processor/ping"
 )
 
 func main() {
 	flag.Parse()
 
-	k := lokalkash.New(confi.Domains...)
+	k := localcache.New(config.Domains...)
 
 	go func() {
 		for {
@@ -30,5 +30,5 @@ func main() {
 
 	a := api.New(k)
 
-	log.Fatal(http.ListenAndServe(*confi.Host, a.Routr()))
+	log.Fatal(http.ListenAndServe(*config.Host, a.Router()))
 }

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"regexp"
 
-	confi "githud.com/test-task/insert"
+	config "githud.com/test-task/internal"
 )
 
 var validPath = regexp.MustCompile("^/(site|endpoint)?(/max|/min)?$")
@@ -23,7 +23,7 @@ func validUrl(f func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 }
 
 // проверка метода
-func validMethd(f func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
+func validMethod(f func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -35,10 +35,10 @@ func validMethd(f func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc
 }
 
 // индификация админа
-func identifie(f func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
+func identified(f func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		key := r.FormValue("key")
-		if key == confi.Key {
+		if key == config.Key {
 			f(w, r)
 		} else {
 			http.Error(w, "denial of access", http.StatusBadRequest)

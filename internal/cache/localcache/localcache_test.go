@@ -1,4 +1,4 @@
-package lokalkash_test
+package loсalcache_test
 
 import (
 	"errors"
@@ -6,14 +6,14 @@ import (
 	"testing"
 	"time"
 
-	"githud.com/test-task/insert/kesh"
-	"githud.com/test-task/insert/kesh/lokalkash"
+	"githud.com/test-task/internal/cache"
+	loсalcache "githud.com/test-task/internal/cache/localcache"
 	"githud.com/test-task/pkg/e"
 )
 
-var _ kesh.Kesh = (*lokalkash.LokalKash)(nil)
+var _ cache.Cache = (*loсalcache.LocalCache)(nil)
 
-// тест вункции lokalkash.New
+// тест вункции loсalcache.New
 func TestNew(t *testing.T) {
 	testCases := []struct {
 		title    string
@@ -57,43 +57,43 @@ func TestNew(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.title, func(t *testing.T) {
-			result := lokalkash.New(tC.data...)
-			if !reflect.DeepEqual(result.Kash, tC.expected) {
-				t.Errorf("invalid func lokalkash.New\nexpected:\n%v\nresult:\n%v", tC.expected, result)
+			result := loсalcache.New(tC.data...)
+			if !reflect.DeepEqual(result.Cache, tC.expected) {
+				t.Errorf("invalid func loсalcache.New\nexpected:\n%v\nresult:\n%v", tC.expected, result)
 			}
 		})
 	}
 }
 
-// тест метода lokalkash.Singl
+// тест метода lokalcache.Single
 func TestSingl(t *testing.T) {
 	testCases := []struct {
 		title       string
 		domain      string
-		expected    *kesh.Website
+		expected    *cache.Website
 		errExpected error
 	}{
 		{
 			"test1",
 			"youtube.com",
-			&kesh.Website{Domain: "youtube.com", Delay: time.Second},
+			&cache.Website{Domain: "youtube.com", Delay: time.Second},
 			nil,
 		},
 		{
 			"test2",
 			"facebook.com",
-			&kesh.Website{Domain: "facebook.com", Delay: time.Second},
+			&cache.Website{Domain: "facebook.com", Delay: time.Second},
 			nil,
 		},
 		{
 			"test3",
 			"ya.ru",
 			nil,
-			e.Err(lokalkash.ErrSignal, errors.New(lokalkash.ErrNotFound)),
+			e.Err(loсalcache.ErrSignal, errors.New(loсalcache.ErrNotFound)),
 		},
 	}
 
-	kash := lokalkash.New(
+	c := loсalcache.New(
 		"google.com", "youtube.com", "facebook.com", "baidu.com",
 		"wikipedia.org", "qq.com", "taobao.com", "yahoo.com",
 		"tmall.com", "amazon.com", "google.co.in", "twitter.com",
@@ -109,34 +109,34 @@ func TestSingl(t *testing.T) {
 		"bing.com", "xvideos.com", "google.ca",
 	)
 
-	kash.Updata(kesh.New("youtube.com", time.Second))
-	kash.Updata(kesh.New("facebook.com", time.Second))
+	c.Update(cache.New("youtube.com", time.Second))
+	c.Update(cache.New("facebook.com", time.Second))
 
 	for _, tC := range testCases {
 		t.Run(tC.title, func(t *testing.T) {
-			result, err := kash.Singl(tC.domain)
+			result, err := c.Single(tC.domain)
 			if !reflect.DeepEqual(err, tC.errExpected) {
-				t.Errorf("invalid method lokalkash.Singl\nerr xpected:\n%v\nerr:\n%v", tC.errExpected, err)
+				t.Errorf("invalid method lokalcache.Single\nerr expected:\n%v\nerr:\n%v", tC.errExpected, err)
 				return
 			}
 			if !reflect.DeepEqual(result, tC.expected) {
-				t.Errorf("invalid method lokalkash.Singl\nexpected:\n%v\nresult:\n%v", tC.expected, result)
+				t.Errorf("invalid method lokalcache.Single\nexpected:\n%v\nresult:\n%v", tC.expected, result)
 			}
 		})
 	}
 }
 
-// тест метода kash.Updata
-func TestUpdata(t *testing.T) {
+// тест метода cache.Update
+func TestUpdate(t *testing.T) {
 	testCases := []struct {
 		title       string
-		data        *kesh.Website
+		data        *cache.Website
 		expected    map[string]time.Duration
 		errExpected error
 	}{
 		{
 			"test1",
-			&kesh.Website{Domain: "google.com", Delay: time.Millisecond * 100},
+			&cache.Website{Domain: "google.com", Delay: time.Millisecond * 100},
 			map[string]time.Duration{
 				"google.com": time.Millisecond * 100, "youtube.com": time.Hour,
 			},
@@ -144,7 +144,7 @@ func TestUpdata(t *testing.T) {
 		},
 		{
 			"test2",
-			&kesh.Website{Domain: "youtube.com", Delay: time.Millisecond * 250},
+			&cache.Website{Domain: "youtube.com", Delay: time.Millisecond * 250},
 			map[string]time.Duration{
 				"google.com": time.Millisecond * 100, "youtube.com": time.Millisecond * 250,
 			},
@@ -152,48 +152,48 @@ func TestUpdata(t *testing.T) {
 		},
 		{
 			"test3",
-			&kesh.Website{Domain: "ya.ru", Delay: time.Millisecond * 250},
+			&cache.Website{Domain: "ya.ru", Delay: time.Millisecond * 250},
 			map[string]time.Duration{
 				"google.com": time.Millisecond * 100, "youtube.com": time.Millisecond * 250,
 			},
-			e.Err(lokalkash.ErrUpdata, errors.New(lokalkash.ErrNotFound)),
+			e.Err(loсalcache.ErrUpdate, errors.New(loсalcache.ErrNotFound)),
 		},
 	}
 
-	kash := lokalkash.New(
+	cache := loсalcache.New(
 		"google.com", "youtube.com",
 	)
 
 	for _, tC := range testCases {
 		t.Run(tC.title, func(t *testing.T) {
-			err := kash.Updata(tC.data)
+			err := cache.Update(tC.data)
 			if !reflect.DeepEqual(err, tC.errExpected) {
-				t.Errorf("invalid method lokalkash.Updata\nerr xpected:\n%v\nerr:\n%v", tC.errExpected, err)
+				t.Errorf("invalid method loсalcache.Updata\nerr xpected:\n%v\nerr:\n%v", tC.errExpected, err)
 				return
 			}
-			if !reflect.DeepEqual(kash.Kash, tC.expected) {
-				t.Errorf("invalid method lokalkash.Updata\nexpected:\n%v\nresult:\n%v", tC.expected, kash.Kash)
+			if !reflect.DeepEqual(cache.Cache, tC.expected) {
+				t.Errorf("invalid method loсalcache.Updata\nexpected:\n%v\nresult:\n%v", tC.expected, cache.Cache)
 			}
 		})
 	}
 }
 
-// тест метода lokalkash.Min
+// тест метода loсalcache.Min
 func TestMin(t *testing.T) {
 	testCases := []struct {
 		title string
-		// data     *kesh.Website
-		expected    *kesh.Website
+		// data     *cache.Website
+		expected    *cache.Website
 		errExpected error
 	}{
 		{
 			"test1",
-			kesh.New("bing.com", time.Millisecond*85),
+			cache.New("bing.com", time.Millisecond*85),
 			nil,
 		},
 	}
 
-	k := lokalkash.New(
+	k := loсalcache.New(
 		"google.com", "youtube.com", "facebook.com", "baidu.com",
 		"wikipedia.org", "qq.com", "taobao.com", "yahoo.com",
 		"tmall.com", "amazon.com", "google.co.in", "twitter.com",
@@ -208,17 +208,17 @@ func TestMin(t *testing.T) {
 		"ebay.com", "microsoft.com", "livejasmin.com", "t.co",
 		"bing.com", "xvideos.com", "google.ca",
 	)
-	err := k.Updata(kesh.New("google.com", time.Millisecond*150))
+	err := k.Update(cache.New("google.com", time.Millisecond*150))
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = k.Updata(kesh.New("google.ca", time.Millisecond*90))
+	err = k.Update(cache.New("google.ca", time.Millisecond*90))
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = k.Updata(kesh.New("bing.com", time.Millisecond*85))
+	err = k.Update(cache.New("bing.com", time.Millisecond*85))
 	if err != nil {
 		t.Error(err)
 	}
@@ -227,29 +227,29 @@ func TestMin(t *testing.T) {
 		t.Run(tC.title, func(t *testing.T) {
 			result, _ := k.Min()
 			if !reflect.DeepEqual(result, tC.expected) {
-				t.Errorf("invalid method lokalkash.Min\nexpected:\n%v\nresult:\n%v", tC.expected, result)
+				t.Errorf("invalid method lokalcache.Min\nexpected:\n%v\nresult:\n%v", tC.expected, result)
 			}
 
 		})
 	}
 }
 
-// тест метода lokalkash.Max
+// тест метода lokalcache.Max
 func TestMax(t *testing.T) {
 	testCases := []struct {
 		title string
-		// data     *kesh.Website
-		expected    *kesh.Website
+		// data     *cache.Website
+		expected    *cache.Website
 		errExpected error
 	}{
 		{
 			"test1",
-			kesh.New("google.com", time.Millisecond*150),
+			cache.New("google.com", time.Millisecond*150),
 			nil,
 		},
 	}
 
-	k := lokalkash.New(
+	k := loсalcache.New(
 		"google.com", "youtube.com", "facebook.com", "baidu.com",
 		"wikipedia.org", "qq.com", "taobao.com", "yahoo.com",
 		"tmall.com", "amazon.com", "google.co.in", "twitter.com",
@@ -264,22 +264,22 @@ func TestMax(t *testing.T) {
 		"ebay.com", "microsoft.com", "livejasmin.com", "t.co",
 		"bing.com", "xvideos.com", "google.ca",
 	)
-	err := k.Updata(kesh.New("google.com", time.Millisecond*150))
+	err := k.Update(cache.New("google.com", time.Millisecond*150))
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = k.Updata(kesh.New("google.ca", time.Millisecond*90))
+	err = k.Update(cache.New("google.ca", time.Millisecond*90))
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = k.Updata(kesh.New("bing.com", time.Millisecond*85))
+	err = k.Update(cache.New("bing.com", time.Millisecond*85))
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = k.Updata(kesh.New("bing.com", time.Hour*6))
+	err = k.Update(cache.New("bing.com", time.Hour*6))
 	if err != nil {
 		t.Error(err)
 	}
@@ -288,14 +288,14 @@ func TestMax(t *testing.T) {
 		t.Run(tC.title, func(t *testing.T) {
 			result, _ := k.Max()
 			if !reflect.DeepEqual(result, tC.expected) {
-				t.Errorf("invalid method lokalkash.Max\nexpected:\n%v\nresult:\n%v", tC.expected, result)
+				t.Errorf("invalid method lokalcache.Max\nexpected:\n%v\nresult:\n%v", tC.expected, result)
 			}
 
 		})
 	}
 }
 
-// тест метода lokalkash.list
+// тест метода lokalcache.list
 func TestList(t *testing.T) {
 	testCases := []struct {
 		title string
@@ -323,7 +323,7 @@ func TestList(t *testing.T) {
 		},
 	}
 
-	k := lokalkash.New("google.com", "youtube.com", "facebook.com", "baidu.com",
+	k := loсalcache.New("google.com", "youtube.com", "facebook.com", "baidu.com",
 		"wikipedia.org", "qq.com", "taobao.com", "yahoo.com",
 		"tmall.com", "amazon.com", "google.co.in", "twitter.com",
 		"sohu.com", "jd.com", "live.com", "instagram.com",
@@ -341,7 +341,7 @@ func TestList(t *testing.T) {
 		t.Run(tC.title, func(t *testing.T) {
 			result, _ := k.List()
 			if len(result) != len(tC.expected) {
-				t.Errorf("invalid func lokalkash.List\nexpected:\n%v\nresult:\n%v", len(tC.expected), len(result))
+				t.Errorf("invalid func loсalcache.List\nexpected:\n%v\nresult:\n%v", len(tC.expected), len(result))
 			}
 		})
 	}

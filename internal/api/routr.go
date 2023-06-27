@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"githud.com/test-task/insert/kesh"
+	"githud.com/test-task/internal/cache"
 )
 
 // структур адля ответа клиеннту
@@ -22,30 +22,30 @@ type Request struct {
 
 // структура хронит все обращения к эндпоиторам
 type Pointer struct {
-	Particula Request `json:"particula"`
-	Min       Request `json:"min"`
-	Max       Request `json:"max"`
+	Certain Request `json:"certain"`
+	Min     Request `json:"min"`
+	Max     Request `json:"max"`
 }
 
 type application struct {
-	k    kesh.Kesh
+	k    cache.Cache
 	stat Pointer
 }
 
-func New(k kesh.Kesh) *application {
+func New(k cache.Cache) *application {
 	return &application{
 		k: k,
 	}
 }
 
 // маршрутизатор
-func (a *application) Routr() *http.ServeMux {
+func (a *application) Router() *http.ServeMux {
 	var mux = http.NewServeMux()
 
-	mux.HandleFunc("/site", validUrl(validMethd(a.particula)))
-	mux.HandleFunc("/site/min", validUrl(validMethd(a.min)))
-	mux.HandleFunc("/site/max", validUrl(validMethd(a.max)))
-	mux.HandleFunc("/endpoint", validUrl(validMethd(identifie(a.pointer))))
+	mux.HandleFunc("/site", validUrl(validMethod(a.certain)))
+	mux.HandleFunc("/site/min", validUrl(validMethod(a.min)))
+	mux.HandleFunc("/site/max", validUrl(validMethod(a.max)))
+	mux.HandleFunc("/endpoint", validUrl(validMethod(identified(a.pointer))))
 
 	log.Println("server start")
 	return mux

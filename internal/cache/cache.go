@@ -1,4 +1,4 @@
-package kesh
+package cache
 
 import "time"
 
@@ -8,11 +8,11 @@ type Website struct {
 	Delay  time.Duration
 }
 
-type Kesh interface {
+type Cache interface {
 	//изменение даных
-	Updata(*Website) error
+	Update(*Website) error
 	//получение даных о сате по названию
-	Singl(string) (*Website, error)
+	Single(string) (*Website, error)
 	//получение даных о сате с минимальной задержкой
 	Min() (*Website, error)
 	//получение даных о сате с максимальной задержкой

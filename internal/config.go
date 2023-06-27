@@ -1,5 +1,5 @@
 // фаил содержит глобальнве переменые
-package confi
+package config
 
 import "flag"
 
